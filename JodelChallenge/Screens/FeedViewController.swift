@@ -30,12 +30,7 @@ class FeedViewController : UICollectionViewController {
         
         self.collectionView?.addSubview(self.refreshControl)
         
-        FlickrApi.fetchPhotos(withPageNumber: 1, andCompletion: { [weak self] (responseArray, error) in
-            self?.data.append(responseArray ?? [])
-            DispatchQueue.main.async(execute: {
-                self?.collectionView?.reloadData()
-            })
-        })
+        fetchDataWith(pageNumber: 1, andReplacement: false)
     }
 }
 
@@ -43,15 +38,22 @@ class FeedViewController : UICollectionViewController {
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         
-        FlickrApi.fetchPhotos(withPageNumber: 2,andCompletion: { [weak self] (responseArray, error) in
-            self?.data.append(responseArray ?? [])
+        fetchDataWith(pageNumber: 1, andReplacement: true)
+        
+        refreshControl.endRefreshing()
+    }
+    
+    func fetchDataWith(pageNumber: Int, andReplacement replacement: Bool) {
+        FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, error) in
+            if replacement {
+                self?.data = [responseArray ?? []]
+            } else {
+                self?.data.append(responseArray ?? [])
+            }
             DispatchQueue.main.async(execute: {
                 self?.collectionView?.reloadData()
             })
         })
-        
-        self.collectionView?.reloadData()
-        refreshControl.endRefreshing()
     }
 }
 
@@ -73,6 +75,7 @@ extension FeedViewController {
 }
 
 extension FeedViewController: UICollectionViewDelegateFlowLayout {
+    // Set width of single element in collectionview
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
@@ -82,20 +85,30 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: widthPerItem, height: widthPerItem)
     }
     
+    // Set insets
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return sectionInsets
     }
     
+    // Set left inset
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
     }
     
+    // Set section header
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
-            sectionHeader.sectionHeaderLabel.text = "Page \(indexPath.section)"
+            sectionHeader.sectionHeaderLabel.text = "Page \(indexPath.section + 1)"
             return sectionHeader
         }
         return UICollectionReusableView()
+    }
+    
+    // Load new content when at bottom of current feed
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.section == data.count - 1 && indexPath.row == data.last!.count - 1 {
+            fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false)
+        }
     }
 }
