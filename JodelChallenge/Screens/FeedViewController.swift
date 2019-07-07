@@ -43,9 +43,9 @@ extension FeedViewController {
         refreshControl.endRefreshing()
     }
     
-    func fetchDataWith(pageNumber: Int, andReplacement replacement: Bool) {
+    func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool) {
         FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, error) in
-            if replacement {
+            if shouldReplace {
                 self?.data = [responseArray ?? []]
             } else {
                 self?.data.append(responseArray ?? [])
