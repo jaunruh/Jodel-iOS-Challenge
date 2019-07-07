@@ -12,7 +12,8 @@ class FeedCell : UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     
-    public func configure(with imageUrl : URL) {
+    public func configure(with imageInformation : Dictionary<AnyHashable, Any>) {
+        let imageUrl = imageInformation["url"] as! URL
         if let data = try? Data(contentsOf: imageUrl) {
             let image = UIImage(data: data)
             imageView.image = image
