@@ -53,6 +53,7 @@
                                 <connections>
                                     <outlet property="imageView" destination="gBN-oE-nWL" id="T5b-K3-bfF"/>
                                     <outlet property="titleLabel" destination="hZa-EE-8MB" id="7pf-PA-Ptf"/>
+                                    <segue destination="69J-F6-NAn" kind="show" identifier="ShowDetails" id="UDu-Z1-Pcp"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -104,6 +105,49 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GGw-l0-jHX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="757.60000000000002" y="-174.06296851574214"/>
+        </scene>
+        <!--Details View Controller-->
+        <scene sceneID="hLm-8M-M7e">
+            <objects>
+                <viewController id="69J-F6-NAn" customClass="DetailsViewController" customModule="JodelChallenge" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WMb-kP-F8J"/>
+                        <viewControllerLayoutGuide type="bottom" id="7BY-qb-eXX"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Y3o-Ds-0mj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UxC-K5-UjW">
+                                <rect key="frame" x="16" y="72" width="343" height="128"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="zmF-bc-k61"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LdP-o9-udZ">
+                                <rect key="frame" x="16" y="224" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UxC-K5-UjW" firstAttribute="top" secondItem="WMb-kP-F8J" secondAttribute="bottom" constant="8" id="GFp-fR-Dh7"/>
+                            <constraint firstAttribute="trailing" secondItem="UxC-K5-UjW" secondAttribute="trailing" constant="16" id="IWJ-Jx-e04"/>
+                            <constraint firstItem="LdP-o9-udZ" firstAttribute="top" secondItem="UxC-K5-UjW" secondAttribute="bottom" constant="24" id="Ofs-go-SEk"/>
+                            <constraint firstItem="LdP-o9-udZ" firstAttribute="leading" secondItem="Y3o-Ds-0mj" secondAttribute="leading" constant="16" id="jxD-n0-LSH"/>
+                            <constraint firstItem="UxC-K5-UjW" firstAttribute="leading" secondItem="Y3o-Ds-0mj" secondAttribute="leading" constant="16" id="wXI-QM-k6a"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="detailsImage" destination="UxC-K5-UjW" id="fg5-b7-vhD"/>
+                        <outlet property="detailsTitel" destination="LdP-o9-udZ" id="iGq-b0-zS4"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ANG-PB-4vm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2680.8000000000002" y="-174.06296851574214"/>
         </scene>
     </scenes>
 </document>

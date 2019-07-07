@@ -10,7 +10,7 @@ import UIKit
 
 class FeedViewController : UICollectionViewController {
     
-    var data : [[Dictionary<AnyHashable, Any>]] = []
+    var data: [[Dictionary<AnyHashable, Any>]] = []
     private let reuseIdentifier = "FeedCell"
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     private let itemsPerRow: CGFloat = 1
@@ -111,4 +111,23 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
             fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false)
         }
     }
+    
+    // Cell selected
+    // Why do not need to perfrom the segue? Why is it already triggered?
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        performSegue(withIdentifier: "ShowDetails", sender: self)
+    }
+    
+    // Override segue function
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDetails" {
+            if let destinationVC = segue.destination as? DetailsViewController {
+                if let cell = sender as? FeedCell {
+                    destinationVC.data = cell.data
+                }
+            }
+        }
+    }
+    
+    
 }
