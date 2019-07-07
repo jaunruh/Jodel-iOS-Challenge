@@ -15,15 +15,43 @@ class FeedViewController : UICollectionViewController {
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     private let itemsPerRow: CGFloat = 1
     
+    lazy var refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action:
+            #selector(FeedViewController.handleRefresh(_:)),
+                                 for: UIControl.Event.valueChanged)
+        refreshControl.tintColor = UIColor.red
+        
+        return refreshControl
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        FlickrApi.fetchPhotos { [weak self] (responseArray, error) in
+        self.collectionView?.addSubview(self.refreshControl)
+        
+        FlickrApi.fetchPhotos(withPageNumber: 1, andCompletion: { [weak self] (responseArray, error) in
             self?.data = responseArray ?? []
             DispatchQueue.main.async(execute: {
                 self?.collectionView?.reloadData()
             })
-        }
+        })
+    }
+}
+
+// Custom methods
+extension FeedViewController {
+    @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+        
+        FlickrApi.fetchPhotos(withPageNumber: 2,andCompletion: { [weak self] (responseArray, error) in
+            self?.data = responseArray ?? []
+            DispatchQueue.main.async(execute: {
+                self?.collectionView?.reloadData()
+            })
+        })
+        
+        self.collectionView?.reloadData()
+        refreshControl.endRefreshing()
     }
 }
 
