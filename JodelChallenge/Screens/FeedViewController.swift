@@ -30,7 +30,9 @@ class FeedViewController : UICollectionViewController {
         
         self.collectionView?.addSubview(self.refreshControl)
         
-        fetchDataWith(pageNumber: 1, andReplacement: false, andCompletion: nil)
+        fetchDataWith(pageNumber: 1, andReplacement: false, andCompletion: {
+            self.collectionView.backgroundView = nil
+        })
     }
 }
 
@@ -38,8 +40,10 @@ class FeedViewController : UICollectionViewController {
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         
+        // Currently I have the following issue here:
+        // When I pull to refresh, the spinner shows only for a short time.
+        // probably, because i dont remove the data...
         fetchDataWith(pageNumber: 1, andReplacement: true, andCompletion: nil)
-        
         refreshControl.endRefreshing()
     }
     
@@ -66,7 +70,13 @@ extension FeedViewController {
 // UICollectionViewDataSource methods
 extension FeedViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return data.count
+//        return data.count
+        if data.count > 0 {
+            return data.count
+        } else {
+            TableViewHelper.EmptyMessage(message: "Please wait while the data is loading.", viewController: self)
+            return 0
+        }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -138,5 +148,22 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
                 }
             }
         }
+    }
+}
+
+
+class TableViewHelper {
+    
+    class func EmptyMessage(message:String, viewController:UICollectionViewController) {
+        let rect = CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: viewController.view.bounds.size.width, height: viewController.view.bounds.size.height))
+        let messageLabel = UILabel(frame: rect)
+        messageLabel.text = message
+        messageLabel.textColor = UIColor.black
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = .center;
+        messageLabel.font = UIFont(name: "TrebuchetMS", size: 15)
+        messageLabel.sizeToFit()
+        
+        viewController.collectionView.backgroundView = messageLabel;
     }
 }
