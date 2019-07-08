@@ -30,7 +30,7 @@ class FeedViewController : UICollectionViewController {
         
         self.collectionView?.addSubview(self.refreshControl)
         
-        fetchDataWith(pageNumber: 1, andReplacement: false)
+        fetchDataWith(pageNumber: 1, andReplacement: false, andCompletion: nil)
     }
 }
 
@@ -38,13 +38,14 @@ class FeedViewController : UICollectionViewController {
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         
-        fetchDataWith(pageNumber: 1, andReplacement: true)
+        fetchDataWith(pageNumber: 1, andReplacement: true, andCompletion: nil)
         
         refreshControl.endRefreshing()
     }
     
-    func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool) {
+    func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
         FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, error) in
+            usleep(2000000) // for debugging purposes
             if shouldReplace {
                 self?.data = [responseArray ?? []]
             } else {
@@ -52,8 +53,13 @@ extension FeedViewController {
             }
             DispatchQueue.main.async(execute: {
                 self?.collectionView?.reloadData()
+                completion?()
             })
         })
+    }
+    
+    private func isEndOfFeedAt(indexPath: IndexPath) -> Bool {
+        return indexPath.section == data.count - 1 && indexPath.row == data.last!.count - 1
     }
 }
 
@@ -98,24 +104,29 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
     // Set section header
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
+        
+        if kind == "UICollectionElementKindSectionHeader", let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader {
             sectionHeader.sectionHeaderLabel.text = "Page \(indexPath.section + 1)"
             return sectionHeader
+        }
+        if kind == "UICollectionElementKindSectionFooter", let sectionFooter = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as? SectionFooter {
+            return sectionFooter
         }
         return UICollectionReusableView()
     }
     
-    // Load new content when at bottom of current feed
-    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.section == data.count - 1 && indexPath.row == data.last!.count - 1 {
-            fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false)
+    override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        
+        if view.isKind(of: SectionFooter.self) {
+            if indexPath.section == self.data.count - 1 {
+                view.isHidden = false
+                fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false, andCompletion: {
+                    view.isHidden = true
+                })
+            } else {
+                view.isHidden = true
+            }
         }
-    }
-    
-    // Cell selected
-    // Why do not need to perfrom the segue? Why is it already triggered?
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        performSegue(withIdentifier: "ShowDetails", sender: self)
     }
     
     // Override segue function
@@ -128,6 +139,4 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
             }
         }
     }
-    
-    
 }

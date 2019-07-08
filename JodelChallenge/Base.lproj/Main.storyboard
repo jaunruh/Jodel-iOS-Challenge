@@ -20,7 +20,7 @@
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="50W-nZ-4zn">
                             <size key="itemSize" width="200" height="200"/>
                             <size key="headerReferenceSize" width="50" height="50"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="50" height="50"/>
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
@@ -76,6 +76,22 @@
                                 <outlet property="sectionHeaderLabel" destination="gDX-cj-hGd" id="gAS-6v-C1V"/>
                             </connections>
                         </collectionReusableView>
+                        <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="SectionFooter" id="1bp-oG-0CF" customClass="SectionFooter" customModule="JodelChallenge" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="250" width="375" height="50"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="AWN-tY-5hh">
+                                    <rect key="frame" x="177.5" y="15" width="20" height="20"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="AWN-tY-5hh" firstAttribute="centerY" secondItem="1bp-oG-0CF" secondAttribute="centerY" id="0jD-Co-TiL"/>
+                                <constraint firstItem="AWN-tY-5hh" firstAttribute="centerX" secondItem="1bp-oG-0CF" secondAttribute="centerX" id="o52-Qb-BY2"/>
+                            </constraints>
+                            <connections>
+                                <outlet property="loadingIndicator" destination="AWN-tY-5hh" id="u6d-Gn-kBG"/>
+                            </connections>
+                        </collectionReusableView>
                         <connections>
                             <outlet property="dataSource" destination="GZw-80-Ba9" id="qJ4-2E-YSD"/>
                             <outlet property="delegate" destination="GZw-80-Ba9" id="sDL-yF-Dy1"/>
@@ -118,14 +134,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UxC-K5-UjW">
-                                <rect key="frame" x="16" y="72" width="343" height="128"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UxC-K5-UjW">
+                                <rect key="frame" x="16" y="72" width="343" height="300"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="zmF-bc-k61"/>
+                                    <constraint firstAttribute="height" constant="300" id="zmF-bc-k61"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LdP-o9-udZ">
-                                <rect key="frame" x="16" y="224" width="42" height="21"/>
+                                <rect key="frame" x="16" y="396" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>

@@ -17,6 +17,7 @@
 		3FBCC75A1F73AE9200D35147 /* JodelChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FBCC7591F73AE9200D35147 /* JodelChallengeTests.swift */; };
 		8FCD11C722D2104D007299D1 /* SectionHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCD11C622D2104D007299D1 /* SectionHeader.swift */; };
 		8FCD11C922D2334C007299D1 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCD11C822D2334C007299D1 /* DetailsViewController.swift */; };
+		8FCD11CD22D36381007299D1 /* SectionFooter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCD11CC22D36381007299D1 /* SectionFooter.swift */; };
 		E3F2831F9F2C8EF141DFDAF9 /* libPods-JodelChallenge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 310774A51D73A513D7854CD7 /* libPods-JodelChallenge.a */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		725C4F04B15E5272D8D1E3A0 /* Pods-JodelChallenge.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JodelChallenge.debug.xcconfig"; path = "Pods/Target Support Files/Pods-JodelChallenge/Pods-JodelChallenge.debug.xcconfig"; sourceTree = "<group>"; };
 		8FCD11C622D2104D007299D1 /* SectionHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionHeader.swift; sourceTree = "<group>"; };
 		8FCD11C822D2334C007299D1 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		8FCD11CC22D36381007299D1 /* SectionFooter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionFooter.swift; sourceTree = "<group>"; };
 		A7096B2AF22017DBA2B785C4 /* Pods-JodelChallenge.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-JodelChallenge.release.xcconfig"; path = "Pods/Target Support Files/Pods-JodelChallenge/Pods-JodelChallenge.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +79,7 @@
 				0A0367FA22C4E2BE0041C31E /* FeedViewController.swift */,
 				0A0367FC22C4E5DC0041C31E /* FeedCell.swift */,
 				8FCD11C622D2104D007299D1 /* SectionHeader.swift */,
+				8FCD11CC22D36381007299D1 /* SectionFooter.swift */,
 				8FCD11C822D2334C007299D1 /* DetailsViewController.swift */,
 			);
 			path = Screens;
@@ -284,6 +287,7 @@
 				3FBCC7451F73AE9200D35147 /* AppDelegate.swift in Sources */,
 				3F5224401F73B0C100D7D77A /* FlickrApi.m in Sources */,
 				0A0367FD22C4E5DC0041C31E /* FeedCell.swift in Sources */,
+				8FCD11CD22D36381007299D1 /* SectionFooter.swift in Sources */,
 				8FCD11C922D2334C007299D1 /* DetailsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
