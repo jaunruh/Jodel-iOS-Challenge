@@ -9,6 +9,6 @@
 
 @interface FlickrApi : NSObject
 
-+ (void)fetchPhotosWithPageNumber:(int)pageNumber andCompletion:(nullable void (^)(NSArray <NSDictionary *>*_Nullable, NSArray <FlickrObject *>*, NSError *_Nullable))completion;
++ (void)fetchPhotosWithPageNumber:(int)pageNumber andCompletion:(nullable void (^)(NSArray <NSDictionary *>*_Nullable, NSArray <FlickrObject *>*_Nullable, NSError *_Nullable))completion;
 
 @end

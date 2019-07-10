@@ -30,8 +30,8 @@ class FeedViewController : UICollectionViewController {
         
         self.collectionView?.addSubview(self.refreshControl)
         
-        fetchDataWith(pageNumber: 1, andReplacement: false, andCompletion: {
-            self.collectionView.backgroundView = nil
+        fetchDataWith(pageNumber: 1, andReplacement: false, andCompletion: { [weak self] in
+            self?.hideLoading()
         })
     }
 
@@ -72,6 +72,17 @@ extension FeedViewController {
             })
         })
     }
+    
+    func showLoading() {
+        let rect = CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: self.view.bounds.size.width, height: self.view.bounds.size.height))
+        let indicator = UIActivityIndicatorView(frame: rect)
+        indicator.color = .darkGray
+        self.collectionView.backgroundView = indicator
+        indicator.startAnimating()
+    }
+    func hideLoading() {
+        self.collectionView.backgroundView = nil
+    }
 }
 
 // MARK: UICollectionViewDataSource
@@ -80,7 +91,7 @@ extension FeedViewController {
         if flickrData.count > 0 {
             return flickrData.count
         } else {
-            TableViewHelper.EmptyMessage(message: "Please wait while the data is loading.", viewController: self)
+            showLoading()
             return 0
         }
     }
@@ -144,21 +155,5 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
     // Set left inset
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
-    }
-}
-
-class TableViewHelper {
-    
-    class func EmptyMessage(message:String, viewController:UICollectionViewController) {
-        let rect = CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: viewController.view.bounds.size.width, height: viewController.view.bounds.size.height))
-        let messageLabel = UILabel(frame: rect)
-        messageLabel.text = message
-        messageLabel.textColor = UIColor.black
-        messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = .center;
-        messageLabel.font = UIFont(name: "TrebuchetMS", size: 15)
-        messageLabel.sizeToFit()
-        
-        viewController.collectionView.backgroundView = messageLabel;
     }
 }
