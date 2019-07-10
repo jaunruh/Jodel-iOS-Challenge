@@ -13,19 +13,16 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var detailsImage: UIImageView!
     @IBOutlet weak var detailsTitel: UILabel!
     
-    var data: Dictionary<AnyHashable, Any>? = nil
+    var flickrObject: FlickrObject? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let imageInformation = data {
-            let imageUrl = imageInformation["url"] as! URL
-            let title = imageInformation["title"] as! String
-            
-            if let imageData = try? Data(contentsOf: imageUrl) {
+        if let imageInformation = flickrObject {
+            if let imageData = try? Data(contentsOf: imageInformation.url) {
                 let image = UIImage(data: imageData)
                 detailsImage.image = image
-                detailsTitel.text = title
+                detailsTitel.text = imageInformation.title
             }
         }
     }

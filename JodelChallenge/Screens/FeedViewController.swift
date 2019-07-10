@@ -10,7 +10,7 @@ import UIKit
 
 class FeedViewController : UICollectionViewController {
     
-    var data: [[Dictionary<AnyHashable, Any>]] = []
+    var flickrData: [[FlickrObject]] = []
     private let reuseIdentifier = "FeedCell"
     private let sectionInsets = UIEdgeInsets(top: 50.0, left: 20.0, bottom: 50.0, right: 20.0)
     private let itemsPerRow: CGFloat = 1
@@ -34,6 +34,17 @@ class FeedViewController : UICollectionViewController {
             self.collectionView.backgroundView = nil
         })
     }
+
+    // Override segue function
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDetails" {
+            if let destinationVC = segue.destination as? DetailsViewController {
+                if let cell = sender as? FeedCell {
+                    destinationVC.flickrObject = cell.flickrObject
+                }
+            }
+        }
+    }
 }
 
 // Custom methods
@@ -48,12 +59,12 @@ extension FeedViewController {
     }
     
     func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
-        FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, error) in
+        FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, flickrObjectArray, error) in
             usleep(2000000) // for debugging purposes
             if shouldReplace {
-                self?.data = [responseArray ?? []]
+                self?.flickrData = [flickrObjectArray ?? []]
             } else {
-                self?.data.append(responseArray ?? [])
+                self?.flickrData.append(flickrObjectArray ?? [])
             }
             DispatchQueue.main.async(execute: {
                 self?.collectionView?.reloadData()
@@ -61,18 +72,13 @@ extension FeedViewController {
             })
         })
     }
-    
-    private func isEndOfFeedAt(indexPath: IndexPath) -> Bool {
-        return indexPath.section == data.count - 1 && indexPath.row == data.last!.count - 1
-    }
 }
 
-// UICollectionViewDataSource methods
+// MARK: UICollectionViewDataSource
 extension FeedViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return data.count
-        if data.count > 0 {
-            return data.count
+        if flickrData.count > 0 {
+            return flickrData.count
         } else {
             TableViewHelper.EmptyMessage(message: "Please wait while the data is loading.", viewController: self)
             return 0
@@ -80,16 +86,45 @@ extension FeedViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data[section].count
+        return flickrData[section].count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FeedCell
-        cell.configure(with: data[indexPath.section][indexPath.row])
+        cell.configure(with: self.flickrData[indexPath.section][indexPath.row])
         return cell
+    }
+    
+    // Set section header and footer
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        if kind == "UICollectionElementKindSectionHeader", let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader {
+            sectionHeader.sectionHeaderLabel.text = "Page \(indexPath.section + 1)"
+            return sectionHeader
+        }
+        if kind == "UICollectionElementKindSectionFooter", let sectionFooter = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as? SectionFooter {
+            return sectionFooter
+        }
+        return UICollectionReusableView()
+    }
+    
+    // Called before footer or header will show up on screen
+    override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
+        
+        if view.isKind(of: SectionFooter.self) {
+            if indexPath.section == self.flickrData.count - 1 {
+                view.isHidden = false
+                fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false, andCompletion: {
+                    view.isHidden = true
+                })
+            } else {
+                view.isHidden = true
+            }
+        }
     }
 }
 
+// MARK: UICollectionViewDelegateFlowLayout
 extension FeedViewController: UICollectionViewDelegateFlowLayout {
     // Set width of single element in collectionview
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -110,47 +145,7 @@ extension FeedViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
     }
-    
-    // Set section header
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        
-        if kind == "UICollectionElementKindSectionHeader", let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader {
-            sectionHeader.sectionHeaderLabel.text = "Page \(indexPath.section + 1)"
-            return sectionHeader
-        }
-        if kind == "UICollectionElementKindSectionFooter", let sectionFooter = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionFooter", for: indexPath) as? SectionFooter {
-            return sectionFooter
-        }
-        return UICollectionReusableView()
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, willDisplaySupplementaryView view: UICollectionReusableView, forElementKind elementKind: String, at indexPath: IndexPath) {
-        
-        if view.isKind(of: SectionFooter.self) {
-            if indexPath.section == self.data.count - 1 {
-                view.isHidden = false
-                fetchDataWith(pageNumber: indexPath.section + 2, andReplacement: false, andCompletion: {
-                    view.isHidden = true
-                })
-            } else {
-                view.isHidden = true
-            }
-        }
-    }
-    
-    // Override segue function
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowDetails" {
-            if let destinationVC = segue.destination as? DetailsViewController {
-                if let cell = sender as? FeedCell {
-                    destinationVC.data = cell.data
-                }
-            }
-        }
-    }
 }
-
 
 class TableViewHelper {
     

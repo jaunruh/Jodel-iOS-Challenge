@@ -12,16 +12,14 @@ class FeedCell : UICollectionViewCell {
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
-    var data: Dictionary<AnyHashable, Any>?
+    var flickrObject: FlickrObject?
     
-    public func configure(with imageInformation : Dictionary<AnyHashable, Any>) {
-        let imageUrl = imageInformation["url"] as! URL
-        let title = imageInformation["title"] as! String
-        data = imageInformation
-        if let data = try? Data(contentsOf: imageUrl) {
+    public func configure(with imageInformation : FlickrObject) {
+        flickrObject = imageInformation
+        if let data = try? Data(contentsOf: imageInformation.url) {
             let image = UIImage(data: data)
             imageView.image = image
-            titleLabel.text = title
+            titleLabel.text = imageInformation.title
         }
     }
 }
