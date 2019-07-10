@@ -51,9 +51,6 @@ class FeedViewController : UICollectionViewController {
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         
-        // Currently I have the following issue here:
-        // When I pull to refresh, the spinner shows only for a short time.
-        // probably, because i dont remove the data...
         fetchDataWith(pageNumber: 1, andReplacement: true, andCompletion: nil)
         refreshControl.endRefreshing()
     }
@@ -61,15 +58,21 @@ extension FeedViewController {
     func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
         FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (flickrObjectArray, error) in
             usleep(2000000) // for debugging purposes
-            if shouldReplace {
-                self?.flickrData = [flickrObjectArray ?? []]
+            if(error != nil) {
+                DispatchQueue.main.async(execute: {
+                    CollectionViewHelper.EmptyMessage(message: "Could not load data.\nTry again later.", viewController: self!)
+                })
             } else {
-                self?.flickrData.append(flickrObjectArray ?? [])
+                if shouldReplace {
+                    self?.flickrData = [flickrObjectArray ?? []]
+                } else {
+                    self?.flickrData.append(flickrObjectArray ?? [])
+                }
+                DispatchQueue.main.async(execute: {
+                    self?.collectionView?.reloadData()
+                    completion?()
+                })
             }
-            DispatchQueue.main.async(execute: {
-                self?.collectionView?.reloadData()
-                completion?()
-            })
         })
     }
     
