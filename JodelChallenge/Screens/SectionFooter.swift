@@ -13,6 +13,5 @@ class SectionFooter: UICollectionReusableView {
     
     override func layoutSubviews() {
         self.loadingIndicator.startAnimating()
-//        self.isHidden = false
     }
 }

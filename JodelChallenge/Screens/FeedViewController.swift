@@ -18,9 +18,8 @@ class FeedViewController : UICollectionViewController {
     lazy var refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action:
-            #selector(FeedViewController.handleRefresh(_:)),
-                                 for: UIControl.Event.valueChanged)
-        refreshControl.tintColor = UIColor.red
+            #selector(FeedViewController.handleRefresh(_:)), for: UIControl.Event.valueChanged)
+        refreshControl.tintColor = .darkGray
         
         return refreshControl
     }()
@@ -47,7 +46,7 @@ class FeedViewController : UICollectionViewController {
     }
 }
 
-// Custom methods
+// MARK: Custom methods
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
         
@@ -57,7 +56,7 @@ extension FeedViewController {
     
     func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
         FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (flickrObjectArray, error) in
-            usleep(2000000) // for debugging purposes
+//            usleep(2000000) // for debugging purposes
             if(error != nil) {
                 DispatchQueue.main.async(execute: {
                     CollectionViewHelper.EmptyMessage(message: "Could not load data.\nTry again later.", viewController: self!)

@@ -24,17 +24,16 @@
     
     [fk call:interesting completion:^(NSDictionary *response, NSError *error) {
         NSMutableArray *flickrObjectArray = nil;
-        NSMutableArray *photoDataArray = nil;
         if (response) {
             flickrObjectArray = [NSMutableArray array];
-            photoDataArray = [NSMutableArray array];
             for (NSDictionary *photoData in [response valueForKeyPath:@"photos.photo"]) {
-                NSURL *url = [fk photoURLForSize:FKPhotoSizeSmall240 fromPhotoDictionary:photoData];
+                // Mutable dict copy to create FlickrObject from
                 NSMutableDictionary *localPhotoData = [photoData mutableCopy];
+                NSURL *url = [fk photoURLForSize:FKPhotoSizeMedium640 fromPhotoDictionary:photoData];
                 [localPhotoData setObject:url forKey:@"url"];
-                [photoDataArray addObject:[localPhotoData copy]];
+                // Create FlickrObject
                 FlickrObject *myObject = [[FlickrObject alloc] initWith:localPhotoData];
-                if (myObject != nil) {
+                if (myObject != nil) { // If not nil add to return array
                     [flickrObjectArray addObject:myObject];
                 }            
             }

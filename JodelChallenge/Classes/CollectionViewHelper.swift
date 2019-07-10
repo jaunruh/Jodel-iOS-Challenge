@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+// Class for displaying a message in the backgroundView of a ViewController.
+// Used for error handling in the feed.
 class CollectionViewHelper {
     class func EmptyMessage(message:String, viewController:UICollectionViewController) {
         let rect = CGRect(origin: CGPoint(x: 0,y :0), size: CGSize(width: viewController.view.bounds.size.width, height: viewController.view.bounds.size.height))

@@ -12,8 +12,7 @@ class DetailsViewController: UIViewController {
     
     @IBOutlet weak var detailsImage: UIImageView!
     @IBOutlet weak var detailsTitle: UITextView!
-    
-    
+    // FlickrObject is saved here so that one can pass the data from here to the DetailsViewController.
     var flickrObject: FlickrObject? = nil
 
     override func viewDidLoad() {
@@ -28,21 +27,9 @@ class DetailsViewController: UIViewController {
         }
         setupView()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
-// Custom Methods
+// MARK: Custom Methods
 extension DetailsViewController {
     
     func setupView() {

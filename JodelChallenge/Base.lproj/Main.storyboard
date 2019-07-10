@@ -85,7 +85,6 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
-                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="gDX-cj-hGd" firstAttribute="centerX" secondItem="9bv-ct-kU6" secondAttribute="centerX" id="dGg-u4-xa5"/>
                                 <constraint firstItem="gDX-cj-hGd" firstAttribute="centerY" secondItem="9bv-ct-kU6" secondAttribute="centerY" id="eoZ-2B-taG"/>

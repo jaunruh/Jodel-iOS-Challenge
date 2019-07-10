@@ -9,10 +9,12 @@
 import Foundation
 
 @objc public class FlickrObject: NSObject {
+    // Required properies
     var id: String! = nil
     var title: String! = nil
     var url: URL! = nil
     
+    // Optional properties
     let farm: String?
     let isFamily: Bool?
     let isFriend: Bool?
@@ -31,6 +33,7 @@ import Foundation
         self.secret = dataDict["secret"] as? String
         self.server = dataDict["server"] as? Int
         
+        // Failable initializer, because if the below data is missing we should not show a cell
         if let id = dataDict["id"] as? String,
             let title = dataDict["title"] as? String,
             let url = dataDict["url"] as? URL {
