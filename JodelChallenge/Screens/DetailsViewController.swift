@@ -11,7 +11,8 @@ import UIKit
 class DetailsViewController: UIViewController {
     
     @IBOutlet weak var detailsImage: UIImageView!
-    @IBOutlet weak var detailsTitel: UILabel!
+    @IBOutlet weak var detailsTitle: UITextView!
+    
     
     var flickrObject: FlickrObject? = nil
 
@@ -22,9 +23,10 @@ class DetailsViewController: UIViewController {
             if let imageData = try? Data(contentsOf: imageInformation.url) {
                 let image = UIImage(data: imageData)
                 detailsImage.image = image
-                detailsTitel.text = imageInformation.title
+                detailsTitle.text = imageInformation.title
             }
         }
+        setupView()
     }
     
 
@@ -38,4 +40,15 @@ class DetailsViewController: UIViewController {
     }
     */
 
+}
+
+// Custom Methods
+extension DetailsViewController {
+    
+    func setupView() {
+        self.detailsImage.layer.cornerRadius = 10
+        self.detailsImage.layer.borderWidth = 1.0
+        self.detailsImage.layer.borderColor = UIColor.clear.cgColor
+        self.detailsImage.layer.masksToBounds = true
+    }
 }
