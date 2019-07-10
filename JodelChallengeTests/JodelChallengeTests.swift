@@ -11,13 +11,9 @@ import XCTest
 
 class JodelChallengeTests: XCTestCase {
     
-    var app: XCUIApplication!
-    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        app = XCUIApplication()
-        app.launch()
     }
     
     override func tearDown() {
@@ -40,28 +36,28 @@ class JodelChallengeTests: XCTestCase {
     @objc func testFlickrApi() {
         // Create expectation in order to unit test asynchronously
         let myExpectation = expectation(description: "Fetch data from Flickr")
-        
+
         // Call fetch function from NetworkAPI
-        FlickrApi.fetchPhotos(withPageNumber: 1, andCompletion: { (responseArray, error) in
+        FlickrApi.fetchPhotos(withPageNumber: 1, andCompletion: { (flickrData, error) in
 //            usleep(3000000) // -> see if test fails if timeout is reached
-            
+
             // Avoid force unwrapping
-            guard let responseArray = responseArray else {
+            guard let flickrData = flickrData else {
                 XCTFail("No response")
                 return
             }
-            
+
             // Asssert a few properties on the returned data
-            XCTAssertTrue(responseArray.count == 10)
-            let myFirstObject = responseArray.first!
-            XCTAssertTrue(myFirstObject["url"] != nil)
-            XCTAssertTrue(myFirstObject["title"] != nil)
-            XCTAssertTrue(myFirstObject["id"] != nil)
-            
+            XCTAssertTrue(flickrData.count == 10)
+            let myFirstObject = flickrData.first!
+            XCTAssertTrue(myFirstObject.url != nil)
+            XCTAssertTrue(myFirstObject.title != nil)
+            XCTAssertTrue(myFirstObject.id != nil)
+
             // Fullfill expectation if all assertions are met
             myExpectation.fulfill()
         })
-        
+
         // Fail test after 2 seconds wait time
         waitForExpectations(timeout: 2, handler: { error in
             if let error = error {

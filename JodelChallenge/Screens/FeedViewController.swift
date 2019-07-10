@@ -59,7 +59,7 @@ extension FeedViewController {
     }
     
     func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
-        FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (responseArray, flickrObjectArray, error) in
+        FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (flickrObjectArray, error) in
             usleep(2000000) // for debugging purposes
             if shouldReplace {
                 self?.flickrData = [flickrObjectArray ?? []]

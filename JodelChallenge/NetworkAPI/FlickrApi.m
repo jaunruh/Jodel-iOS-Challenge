@@ -13,7 +13,7 @@
 // I have deliberately not implemented this in Swift.
 // I did a crash course in obj c and decided that it would be a good way to get a little bit
 // of obj c knowledge this way
-+ (void)fetchPhotosWithPageNumber:(int)pageNumber andCompletion:(void (^)(NSArray <NSDictionary *>*, NSArray <FlickrObject *>*, NSError *))completion {
++ (void)fetchPhotosWithPageNumber:(int)pageNumber andCompletion:(void (^)(NSArray <FlickrObject *>*, NSError *))completion {
     FlickrKit *fk = [FlickrKit sharedFlickrKit];
 
     [fk initializeWithAPIKey:@"92111faaf0ac50706da05a1df2e85d82" sharedSecret:@"89ded1035d7ceb3a"];
@@ -40,7 +40,7 @@
             }
         }
         if (completion) {
-            completion([photoDataArray copy], [flickrObjectArray copy], error);
+            completion([flickrObjectArray copy], error);
         }
     }];
 }
