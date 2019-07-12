@@ -20,7 +20,6 @@ class FeedViewController : UICollectionViewController {
         refreshControl.addTarget(self, action:
             #selector(FeedViewController.handleRefresh(_:)), for: UIControl.Event.valueChanged)
         refreshControl.tintColor = .darkGray
-        
         return refreshControl
     }()
     
@@ -49,7 +48,6 @@ class FeedViewController : UICollectionViewController {
 // MARK: Custom methods
 extension FeedViewController {
     @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-        
         fetchDataWith(pageNumber: 1, andReplacement: true, andCompletion: nil)
         refreshControl.endRefreshing()
     }
@@ -57,8 +55,9 @@ extension FeedViewController {
     func fetchDataWith(pageNumber: Int, andReplacement shouldReplace: Bool, andCompletion completion: (() -> Void)?) {
         FlickrApi.fetchPhotos(withPageNumber: Int32(pageNumber), andCompletion: { [weak self] (flickrObjectArray, error) in
 //            usleep(2000000) // for debugging purposes
-            if(error != nil) {
+            if(error != nil || flickrObjectArray?.count == 0) {
                 DispatchQueue.main.async(execute: {
+                    self?.flickrData = []
                     CollectionViewHelper.EmptyMessage(message: "Could not load data.\nTry again later.", viewController: self!)
                 })
             } else {
@@ -133,6 +132,16 @@ extension FeedViewController {
             } else {
                 view.isHidden = true
             }
+        }
+    }
+    
+    // In order to completely remove footer when not needed.
+    // Otherwise footer stil took some space. Even when it was hidden.
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        if section == self.flickrData.count - 1 {
+            return CGSize(width: collectionView.frame.size.width, height: 50);
+        }else {
+            return CGSize(width: 0, height: 0);
         }
     }
 }
